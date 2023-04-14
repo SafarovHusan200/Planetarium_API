@@ -30,13 +30,13 @@ exports.getStarById = asyncHandler(async (req, res, next) => {
 // @Route   GET /api/v1/stars
 // @Access  Private / Admin
 exports.createNewStar = asyncHandler(async (req, res, next) => {
-  const { name, temprature, massa, image, diametr } = req.body;
+  const { name, temprature, massa, diametr } = req.body;
   const newStar = await Star.create({
     name,
     temprature,
     massa,
     diametr,
-    image,
+    image: "uploads/" + req.file.filename,
   });
 
   res.status(200).json({

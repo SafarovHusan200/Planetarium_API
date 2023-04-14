@@ -6,10 +6,11 @@ const {
   updateStar,
   deleteStar,
 } = require("../controllers/star.controller");
+const upload = require("../utils/fileUpload");
 const router = Router();
 
 router.get("/", getAllStar);
-router.post("/", createNewStar);
+router.post("/", upload.single("image"), createNewStar);
 router.get("/:id", getStarById);
 router.put("/:id", updateStar);
 router.delete("/:id", deleteStar);
