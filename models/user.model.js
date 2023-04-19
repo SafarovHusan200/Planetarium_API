@@ -57,9 +57,13 @@ userSchema.pre("save", async function (next) {
 
 // Generated jwt token
 userSchema.methods.generateJwtToken = function () {
-  return jwt.sign({ id: this._id, email: this.email }, process.env.JWT_TOKEN, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  return jwt.sign(
+    { id: this._id, email: this.email },
+    process.env.JWT_TOKEN_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    }
+  );
 };
 
 // Check user entered password with hashed password

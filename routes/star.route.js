@@ -8,11 +8,12 @@ const {
 } = require("../controllers/star.controller");
 const upload = require("../utils/fileUpload");
 const router = Router();
+const { protected, adminAccess, apiKeyAccess } = require("../middlewares/auth");
 
-router.get("/", getAllStar);
-router.post("/", upload.single("image"), createNewStar);
-router.get("/:id", getStarById);
-router.put("/:id", updateStar);
-router.delete("/:id", deleteStar);
+router.get("/", apiKeyAccess, getAllStar);
+router.post("/", protected, adminAccess, upload.single("image"), createNewStar);
+router.get("/:id", apiKeyAccess, getStarById);
+router.put("/:id", protected, adminAccess, updateStar);
+router.delete("/:id", protected, adminAccess, deleteStar);
 
 module.exports = router;

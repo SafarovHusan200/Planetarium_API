@@ -8,11 +8,12 @@ const {
 } = require("../controllers/planet.controller");
 const upload = require("../utils/fileUpload");
 const router = Router();
+const { protected, adminAccess, apiKeyAccess } = require("../middlewares/auth");
 
-router.get("/", getAllPlanets);
-router.post("/", upload.single("image"), createPlanet);
-router.get("/:id", getPlanetById);
-router.put("/:id", updatePlanet);
-router.delete("/:id", deletePlanet);
+router.get("/", apiKeyAccess, getAllPlanets);
+router.post("/", protected, adminAccess, upload.single("image"), createPlanet);
+router.get("/:id", apiKeyAccess, getPlanetById);
+router.put("/:id", protected, adminAccess, updatePlanet);
+router.delete("/:id", protected, adminAccess, deletePlanet);
 
 module.exports = router;
