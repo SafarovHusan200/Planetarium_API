@@ -28,7 +28,7 @@ const planetSchema = new mongoose.Schema(
     },
     sequenceNumber: {
       // sayyora tartib raqami
-      type: String,
+      type: Number,
       required: true,
     },
     satellites: {

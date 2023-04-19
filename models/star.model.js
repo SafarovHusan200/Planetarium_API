@@ -4,6 +4,7 @@ const starSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      uniqe: true,
       required: true,
     },
     temprature: {

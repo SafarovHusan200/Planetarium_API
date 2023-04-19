@@ -28,7 +28,8 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/v1/auth", require("./routes/auth.route"));
 // Star route
 app.use("/api/v1/stars", require("./routes/star.route"));
-
+// Planet route
+app.use("/api/v1/planets", require("./routes/planet.route"));
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
