@@ -117,3 +117,59 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
     token,
   });
 });
+
+// @descr   Payment Balance
+// @route   PUT /api/v1/auth/paymentBalance
+// @access  Private
+exports.paymentBalance = asyncHandler(async (req, res, next) => {
+  // CLICK, PAYME
+  const user = await User.findById(req.user._id);
+  const updateUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      balance: user.balance + req.body.payment,
+    },
+    { new: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: updateUser,
+  });
+});
+
+// @descr   Activate Status
+// @route   PUT /api/v1/auth/activate
+// @access  Private
+exports.activateProfile = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const apiCost = process.env.API_COST;
+  console.log(user.balance);
+  if (user.balance < apiCost) {
+    let needMoney = apiCost - user.balance;
+    return next(
+      new ErrorResponse(
+        `Your balance is less than ${apiCost}, You need ${needMoney} more`
+      ),
+      400
+    );
+  }
+
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      balance: user.balance - apiCost,
+      isActive: true,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Your profile successfully activated",
+  });
+});
