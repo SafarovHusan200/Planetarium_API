@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const errorHandler = require("./middlewares/error");
 const colors = require("colors");
+const cors = require("cors");
 const path = require("path");
 const connectDB = require("./config/db");
 
@@ -18,6 +19,7 @@ const app = express();
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 if (process.env.NODE_ENV === "development") {

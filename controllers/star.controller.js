@@ -6,10 +6,25 @@ const asyncHandler = require("../middlewares/async");
 // @Route   GET /api/v1/stars
 // @Access  Public / with apiKey
 exports.getAllStar = asyncHandler(async (req, res, next) => {
-  const stars = await Star.find();
+  // const stars = await Star.find();
+
+  // res.status(200).json({
+  //   success: true,
+  //   data: stars,
+  const pageLimit = process.env.DEFAULT_PAGE_LIMIT || 5;
+  const limit = parseInt(req.query.limit || pageLimit);
+  const page = parseInt(req.query.page || 1);
+  const total = await Star.countDocuments();
+
+  const stars = await Star.find()
+    .skip(page * limit - limit)
+    .limit(limit);
 
   res.status(200).json({
     success: true,
+    pageCount: Math.ceil(total / limit),
+    currentPage: page,
+    nextPage: Math.ceil(total / limit) < page + 1 ? null : page + 1,
     data: stars,
   });
 });
@@ -30,10 +45,10 @@ exports.getStarById = asyncHandler(async (req, res, next) => {
 // @Route   GET /api/v1/stars
 // @Access  Private / Admin
 exports.createNewStar = asyncHandler(async (req, res, next) => {
-  const { name, temprature, massa, diametr } = req.body;
+  const { name, temperature, massa, diametr } = req.body;
   const newStar = await Star.create({
     name,
-    temprature,
+    temperature,
     massa,
     diametr,
     image: "uploads/" + req.file.filename,
@@ -53,7 +68,7 @@ exports.updateStar = asyncHandler(async (req, res, next) => {
 
   const editedStar = {
     name: req.body.name || star.name,
-    temprature: req.body.temprature || star.temprature,
+    temperature: req.body.temperature || star.temperature,
     massa: req.body.massa || star.massa,
     diametr: req.body.diametr || star.diametr,
     image: req.body.image || star.image,
